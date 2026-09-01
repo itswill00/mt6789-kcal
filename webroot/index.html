@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#131217">
+  <meta name="theme-color" content="#0f0e13">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>mt6789-kcal</title>
@@ -12,119 +12,126 @@
     @import url('https://mui.kernelsu.org/internal/colors.css');
 
     :root {
-      --bg: #131217;
-      --surface: #1a1920;
-      --surface-container: #22202a;
-      --surface-container-highest: #2d2a37;
-      --surface-bright: #393546;
-      --primary: #9b87f5;
-      --primary-container: #3d3270;
-      --on-primary-container: #e6e1ff;
-      --on-surface: #f4f3f8;
-      --on-surface-variant: #a9a4b8;
-      --border: rgba(255, 255, 255, 0.08);
-      --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
-      --radius-lg: 14px;
-      --radius-md: 10px;
-      --radius-sm: 6px;
+      --bg: #0f0e13;
+      --surface: #17161d;
+      --surface-container: #1f1d28;
+      --surface-container-high: #292734;
+      --primary: #b3a4f6;
+      --on-primary: #171038;
+      --primary-container: #352b61;
+      --on-primary-container: #e8e2ff;
+      --on-surface: #f3f2f8;
+      --on-surface-variant: #9b95ab;
+      --border: rgba(255, 255, 255, 0.06);
+      --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+      --radius-card: 16px;
+      --radius-pill: 20px;
+      --radius-sm: 8px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     html, body {
-      background-color: var(--bg);
       background: var(--bg);
       color: var(--on-surface);
-      padding: 0;
       margin: 0 auto;
-      max-width: 480px;
+      max-width: 500px;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    .page-header {
+    .nav-bar {
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 40;
       background: var(--bg);
-      padding: calc(10px + var(--window-inset-top, env(safe-area-inset-top, 0px))) 14px 10px 14px;
+      padding: calc(12px + var(--window-inset-top, env(safe-area-inset-top, 0px))) 16px 12px 16px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .page-header-title {
-      font-size: 16px;
+    .brand-title {
+      font-size: 17px;
       font-weight: 700;
       color: var(--on-surface);
-      letter-spacing: -0.3px;
+      letter-spacing: -0.4px;
     }
 
-    .page-header-sub {
-      font-size: 10px;
+    .brand-sub {
+      font-size: 11px;
       color: var(--on-surface-variant);
+      margin-top: 1px;
     }
 
-    .badge-pill {
-      font-size: 10px;
+    .version-tag {
+      font-size: 11px;
       font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 12px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
       background: var(--primary-container);
       color: var(--on-primary-container);
-      border: 1px solid rgba(155, 135, 245, 0.3);
       font-family: var(--font-mono);
     }
 
-    .content-area {
-      padding: 10px 12px calc(20px + var(--window-inset-bottom, env(safe-area-inset-bottom, 0px))) 12px;
+    .container {
+      padding: 14px 16px calc(24px + var(--window-inset-bottom, env(safe-area-inset-bottom, 0px))) 16px;
     }
 
-    .info-strip {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 8px 12px;
-      margin-bottom: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px 12px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .info-item {
+    .section-label {
       font-size: 11px;
-      color: var(--on-surface-variant);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: rgba(255, 255, 255, 0.4);
+      margin: 14px 0 6px 2px;
     }
 
-    .info-item strong {
-      color: var(--on-surface);
+    .section-label:first-child {
+      margin-top: 0;
     }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px;
-      margin-bottom: 10px;
+      border-radius: var(--radius-card);
+      padding: 14px 16px;
+      margin-bottom: 12px;
     }
 
-    .card-title {
-      font-size: 11px;
-      font-weight: 600;
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .status-cell {
+      background: var(--surface-container);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
+
+    .status-lbl {
+      font-size: 10px;
       color: var(--on-surface-variant);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .status-val {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--on-surface);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .preset-grid {
@@ -134,8 +141,8 @@
     }
 
     .preset-btn {
-      padding: 7px 4px;
-      font-size: 10px;
+      padding: 8px 6px;
+      font-size: 11px;
       font-weight: 600;
       background: var(--surface-container);
       border: 1px solid var(--border);
@@ -143,57 +150,54 @@
       border-radius: var(--radius-sm);
       cursor: pointer;
       text-align: center;
-      transition: all 0.15s ease;
+      transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .preset-btn:active, .preset-btn.active {
+    .preset-btn.active {
+      background: var(--primary);
+      color: var(--on-primary);
       border-color: var(--primary);
-      color: var(--on-primary-container);
-      background: var(--primary-container);
     }
 
-    .tabs {
+    .segmented-control {
       display: flex;
-      gap: 4px;
-      margin-bottom: 10px;
+      background: var(--surface-container);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
     }
 
-    .tab {
+    .segment-btn {
       flex: 1;
       padding: 6px 0;
       text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--on-surface-variant);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
+      color: var(--on-surface-variant);
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
     }
 
-    .tab.active {
-      background: var(--surface-container-highest);
+    .segment-btn.active {
+      background: var(--surface-container-high);
       color: var(--on-surface);
-      border-color: var(--surface-bright);
     }
 
-    .slider-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
+    .slider-row {
+      margin-bottom: 12px;
     }
 
-    .slider-group {
-      margin-bottom: 6px;
+    .slider-row:last-child {
+      margin-bottom: 0;
     }
 
-    .slider-header {
+    .slider-info {
       display: flex;
       justify-content: space-between;
-      font-size: 10px;
-      color: var(--on-surface-variant);
-      margin-bottom: 4px;
+      font-size: 12px;
+      color: var(--on-surface);
+      margin-bottom: 6px;
     }
 
     .slider-val {
@@ -206,94 +210,95 @@
       width: 100%;
       height: 4px;
       border-radius: 2px;
-      background: var(--surface-container-highest);
+      background: var(--surface-container-high);
       outline: none;
       -webkit-appearance: none;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
-    .swatch {
-      height: 26px;
+    .preview-bar {
+      height: 28px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      margin: 8px 0;
+      margin-top: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
     }
 
-    .actions {
+    .action-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      margin-top: 10px;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
     }
 
-    button.btn {
-      padding: 8px;
+    .btn {
+      padding: 10px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s ease;
       text-align: center;
     }
 
-    button.btn:active {
-      opacity: 0.8;
+    .btn:active {
+      opacity: 0.75;
     }
 
     .btn-primary {
       background: var(--primary);
-      color: #100e17;
+      color: var(--on-primary);
     }
 
     .btn-secondary {
-      background: var(--surface-container-highest);
+      background: var(--surface-container-high);
       color: var(--on-surface);
       border-color: var(--border);
     }
 
-    pre.logs {
+    .console-box {
       font-family: var(--font-mono);
-      font-size: 9px;
-      background: var(--bg);
-      color: #9ece6a;
-      padding: 8px;
+      font-size: 10px;
+      background: #09080c;
+      color: #a6e22e;
+      padding: 10px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      max-height: 80px;
+      max-height: 90px;
       overflow-y: auto;
       white-space: pre-wrap;
     }
 
     .toast-pill {
       position: fixed;
-      bottom: 16px;
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--surface-container-highest);
-      border: 1px solid var(--surface-bright);
+      background: var(--surface-container-high);
+      border: 1px solid var(--border);
       color: var(--on-surface);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       z-index: 99;
       pointer-events: none;
-      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
       opacity: 0;
     }
 
@@ -304,24 +309,36 @@
 </head>
 <body>
 
-<div class="page-header">
+<div class="nav-bar">
   <div>
-    <div class="page-header-title">mt6789-kcal</div>
-    <div class="page-header-sub">by @itswill00</div>
+    <div class="brand-title">mt6789-kcal</div>
+    <div class="brand-sub">by @itswill00</div>
   </div>
-  <span class="badge-pill" id="version-badge">v1.0.0</span>
+  <span class="version-tag" id="version-tag">v1.0.0</span>
 </div>
 
-<div class="content-area">
+<div class="container">
 
-  <div class="info-strip">
-    <div class="info-item" id="chip-model">Device: <strong>--</strong></div>
-    <div class="info-item" id="chip-fps">Rate: <strong>-- Hz</strong></div>
-    <div class="info-item" id="chip-kcal">KCAL: <strong>--</strong></div>
+  <div class="section-label">System</div>
+  <div class="card">
+    <div class="status-grid">
+      <div class="status-cell">
+        <div class="status-lbl">Device</div>
+        <div class="status-val" id="val-device">--</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-lbl">Refresh rate</div>
+        <div class="status-val" id="val-fps">--</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-lbl">Driver</div>
+        <div class="status-val" id="val-driver">--</div>
+      </div>
+    </div>
   </div>
 
+  <div class="section-label">Presets</div>
   <div class="card">
-    <div class="card-title">Presets</div>
     <div class="preset-grid">
       <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
       <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
@@ -332,65 +349,60 @@
     </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" id="tab-global" onclick="setProfile('global')">Global</div>
-    <div class="tab" id="tab-60" onclick="setProfile('60')">60Hz</div>
-    <div class="tab" id="tab-90" onclick="setProfile('90')">90Hz</div>
-    <div class="tab" id="tab-120" onclick="setProfile('120')">120Hz</div>
-  </div>
-
+  <div class="section-label">Calibration</div>
   <div class="card">
-    <div class="card-title">Color balance</div>
-
-    <div class="slider-grid">
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Red</span>
-          <span class="slider-val" id="val-r">246</span>
-        </div>
-        <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderInput()">
-      </div>
-
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Green</span>
-          <span class="slider-val" id="val-g">250</span>
-        </div>
-        <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderInput()">
-      </div>
-
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Blue</span>
-          <span class="slider-val" id="val-b">256</span>
-        </div>
-        <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderInput()">
-      </div>
-
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Saturation</span>
-          <span class="slider-val" id="val-sat">108%</span>
-        </div>
-        <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderInput()">
-      </div>
+    
+    <div class="segmented-control">
+      <div class="segment-btn active" id="tab-global" onclick="setProfile('global')">Global</div>
+      <div class="segment-btn" id="tab-60" onclick="setProfile('60')">60Hz</div>
+      <div class="segment-btn" id="tab-90" onclick="setProfile('90')">90Hz</div>
+      <div class="segment-btn" id="tab-120" onclick="setProfile('120')">120Hz</div>
     </div>
 
-    <div class="swatch" id="swatch">Preview</div>
+    <div class="slider-row">
+      <div class="slider-info">
+        <span>Red</span>
+        <span class="slider-val" id="lbl-r">246</span>
+      </div>
+      <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderInput()">
+    </div>
 
-    <div class="actions">
+    <div class="slider-row">
+      <div class="slider-info">
+        <span>Green</span>
+        <span class="slider-val" id="lbl-g">250</span>
+      </div>
+      <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderInput()">
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-info">
+        <span>Blue</span>
+        <span class="slider-val" id="lbl-b">256</span>
+      </div>
+      <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderInput()">
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-info">
+        <span>Saturation</span>
+        <span class="slider-val" id="lbl-sat">108%</span>
+      </div>
+      <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderInput()">
+    </div>
+
+    <div class="preview-bar" id="preview-bar">Preview</div>
+
+    <div class="action-row">
       <button class="btn btn-primary" onclick="applySettings(true)">Apply</button>
       <button class="btn btn-secondary" onclick="saveSettings()">Save</button>
       <button class="btn btn-secondary" onclick="resetToDefaults()">Reset</button>
     </div>
   </div>
 
+  <div class="section-label">Log</div>
   <div class="card">
-    <div class="card-title">
-      <span>Log</span>
-      <span style="font-size: 10px; color: var(--primary); cursor: pointer;" onclick="refreshStats()">Refresh</span>
-    </div>
-    <pre class="logs" id="log-text">Initialising...</pre>
+    <div class="console-box" id="log-text">Initialising...</div>
   </div>
 
 </div>
@@ -441,7 +453,7 @@
     });
   }
 
-  function updatePresetButtonState() {
+  function updatePresetState() {
     let p = profiles[activeProfile];
     let matchedName = null;
 
@@ -471,12 +483,12 @@
 
     onSliderInput();
     applySettings(true);
-    showToast(`Applied ${name.charAt(0).toUpperCase() + name.slice(1)} preset`);
+    showToast(`Applied ${name.charAt(0).toUpperCase() + name.slice(1)}`);
   }
 
   function setProfile(name) {
     activeProfile = name;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.segment-btn').forEach(t => t.classList.remove('active'));
     document.getElementById(`tab-${name}`).classList.add('active');
 
     let p = profiles[name];
@@ -510,16 +522,16 @@
 
     profiles[activeProfile] = { r, g, b, sat };
 
-    document.getElementById('val-r').innerText = r;
-    document.getElementById('val-g').innerText = g;
-    document.getElementById('val-b').innerText = b;
-    document.getElementById('val-sat').innerText = sat + '%';
+    document.getElementById('lbl-r').innerText = r;
+    document.getElementById('lbl-g').innerText = g;
+    document.getElementById('lbl-b').innerText = b;
+    document.getElementById('lbl-sat').innerText = sat + '%';
 
-    let swatch = document.getElementById('swatch');
-    swatch.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-    swatch.style.color = (r + g + b) / 3 > 180 ? '#131217' : '#f4f3f8';
+    let preview = document.getElementById('preview-bar');
+    preview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    preview.style.color = (r + g + b) / 3 > 180 ? '#0f0e13' : '#f3f2f8';
 
-    updatePresetButtonState();
+    updatePresetState();
 
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => { applySettings(false); }, 100);
@@ -529,16 +541,16 @@
     try {
       let resModel = await exec("getprop ro.product.model");
       if (resModel.stdout && resModel.stdout.trim()) {
-        document.getElementById('chip-model').innerHTML = 'Device: <strong>' + resModel.stdout.trim() + '</strong>';
+        document.getElementById('val-device').innerText = resModel.stdout.trim();
       }
 
       let resFps = await exec("dumpsys SurfaceFlinger | grep 'refresh-rate' | head -n 1");
       let m = resFps.stdout.match(/(\d+)\s*Hz/i) || resFps.stdout.match(/(\d+)\.\d+\s*fps/i);
       let fps = m ? m[1] : '120';
-      document.getElementById('chip-fps').innerHTML = 'Rate: <strong>' + fps + ' Hz</strong>';
+      document.getElementById('val-fps').innerText = fps + ' Hz';
 
       let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'Present' || echo 'Not Found'");
-      document.getElementById('chip-kcal').innerHTML = 'KCAL: <strong>' + resKcal.stdout.trim() + '</strong>';
+      document.getElementById('val-driver').innerText = resKcal.stdout.trim();
 
       let resLog = await exec("cat /data/adb/modules/mt6789-kcal/calibration.log 2>/dev/null || echo 'Service active.'");
       document.getElementById('log-text').innerText = resLog.stdout.trim();
