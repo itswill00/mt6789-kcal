@@ -13,7 +13,8 @@ if [ ! -f "module.prop" ]; then
 fi
 VERSION=$(grep '^version=' module.prop | cut -d= -f2)
 VERSION_CODE=$(grep '^versionCode=' module.prop | cut -d= -f2)
-ZIP_OUT="mt6789-kcal-${VERSION}.zip"
+GIT_HASH=$(git rev-parse --short HEAD 2>/dev/null || echo "local")
+ZIP_OUT="mt6789-kcal(@itswill00)-b${VERSION_CODE}-${GIT_HASH}.zip"
 
 echo "Building mt6789-kcal ${VERSION} (${VERSION_CODE})"
 
@@ -78,7 +79,7 @@ zip -r "$RELEASE_DIR/$ZIP_OUT" \
     system/bin/kcal.so \
     webroot/index.html >/dev/null
 
-cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/DisplayColorCalibration_Magisk.zip"
-cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/DisplayColorCalibration_Magisk.zip"
+cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/$ZIP_OUT"
+cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/$ZIP_OUT"
 
 echo "Build finished: ${RELEASE_DIR}/${ZIP_OUT}"
