@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0f0e13">
+  <meta name="theme-color" content="#0a0a0c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>mt6789-kcal</title>
@@ -12,19 +12,19 @@
     @import url('https://mui.kernelsu.org/internal/colors.css');
 
     :root {
-      --bg: #0f0e13;
-      --surface: #17161d;
-      --surface-container: #1f1d28;
-      --surface-container-high: #292734;
-      --primary: #b3a4f6;
-      --on-primary: #171038;
-      --primary-container: #352b61;
-      --on-primary-container: #e8e2ff;
-      --on-surface: #f3f2f8;
-      --on-surface-variant: #9b95ab;
-      --border: rgba(255, 255, 255, 0.06);
+      --bg: #0a0a0c;
+      --surface: #121215;
+      --surface-container: #1a1a1e;
+      --surface-container-high: #26262c;
+      --primary: #ffffff;
+      --on-primary: #000000;
+      --primary-container: #2e2e36;
+      --on-primary-container: #ffffff;
+      --on-surface: #ffffff;
+      --on-surface-variant: #8e8e93;
+      --border: rgba(255, 255, 255, 0.08);
       --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-      --radius-card: 16px;
+      --radius-card: 14px;
       --radius-pill: 20px;
       --radius-sm: 8px;
     }
@@ -90,8 +90,11 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--on-surface-variant);
       margin: 14px 0 6px 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .section-label:first-child {
@@ -117,6 +120,7 @@
       background: var(--surface-container);
       border-radius: var(--radius-sm);
       padding: 8px 10px;
+      border: 1px solid var(--border);
     }
 
     .status-lbl {
@@ -151,7 +155,7 @@
       border-radius: var(--radius-sm);
       cursor: pointer;
       text-align: center;
-      transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
+      transition: all 0.15s ease;
     }
 
     .preset-btn.active {
@@ -166,6 +170,7 @@
       padding: 3px;
       border-radius: var(--radius-sm);
       margin-bottom: 12px;
+      border: 1px solid var(--border);
     }
 
     .segment-btn {
@@ -177,7 +182,7 @@
       color: var(--on-surface-variant);
       border-radius: 6px;
       cursor: pointer;
-      transition: all 0.18s cubic-bezier(0.2, 0, 0, 1);
+      transition: all 0.15s ease;
     }
 
     .segment-btn.active {
@@ -203,7 +208,7 @@
 
     .slider-val {
       font-family: var(--font-mono);
-      color: var(--primary);
+      color: var(--on-surface);
       font-weight: 600;
     }
 
@@ -223,7 +228,6 @@
       border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
     .preview-bar {
@@ -276,17 +280,23 @@
       margin-top: 6px;
     }
 
-    .console-box {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      background: #09080c;
-      color: #a6e22e;
-      padding: 10px;
-      border-radius: var(--radius-sm);
+    /* Unwrapped Comfortable Log View */
+    .console-wrapper {
+      background: #000000;
       border: 1px solid var(--border);
-      max-height: 90px;
-      overflow-y: auto;
+      border-radius: var(--radius-card);
+      padding: 12px 14px;
+      margin-top: 4px;
+    }
+
+    pre.logs {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
+      color: #d1d1d6;
+      background: transparent;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .toast-pill {
@@ -301,7 +311,7 @@
       font-weight: 600;
       padding: 8px 18px;
       border-radius: var(--radius-pill);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
       z-index: 99;
       pointer-events: none;
       transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
@@ -407,9 +417,12 @@
     </div>
   </div>
 
-  <div class="section-label">Log</div>
-  <div class="card">
-    <div class="console-box" id="log-text">Initialising...</div>
+  <div class="section-label">
+    <span>Log</span>
+    <span style="font-size: 10px; color: var(--on-surface-variant); cursor: pointer; text-transform: none; font-weight: 500;" onclick="refreshStats()">Refresh</span>
+  </div>
+  <div class="console-wrapper">
+    <pre class="logs" id="log-text">Initialising...</pre>
   </div>
 
 </div>
@@ -558,7 +571,7 @@
 
     let preview = document.getElementById('preview-bar');
     preview.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
-    preview.style.color = (r + g + b) / 3 > 180 ? '#0f0e13' : '#f3f2f8';
+    preview.style.color = (r + g + b) / 3 > 180 ? '#0a0a0c' : '#ffffff';
 
     updatePresetState();
 
