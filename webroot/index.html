@@ -348,7 +348,7 @@
           <span>Red</span>
           <span class="slider-val" id="val-r">246</span>
         </div>
-        <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
+        <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderInput()">
       </div>
 
       <div class="slider-group">
@@ -356,7 +356,7 @@
           <span>Green</span>
           <span class="slider-val" id="val-g">250</span>
         </div>
-        <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
+        <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderInput()">
       </div>
 
       <div class="slider-group">
@@ -364,7 +364,7 @@
           <span>Blue</span>
           <span class="slider-val" id="val-b">256</span>
         </div>
-        <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
+        <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderInput()">
       </div>
 
       <div class="slider-group">
@@ -372,14 +372,14 @@
           <span>Saturation</span>
           <span class="slider-val" id="val-sat">108%</span>
         </div>
-        <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
+        <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderInput()">
       </div>
     </div>
 
     <div class="swatch" id="swatch">Preview</div>
 
     <div class="actions">
-      <button class="btn btn-primary" onclick="applySettings()">Apply</button>
+      <button class="btn btn-primary" onclick="applySettings(true)">Apply</button>
       <button class="btn btn-secondary" onclick="saveSettings()">Save</button>
       <button class="btn btn-secondary" onclick="resetToDefaults()">Reset</button>
     </div>
@@ -441,20 +441,36 @@
     });
   }
 
+  function updatePresetButtonState() {
+    let p = profiles[activeProfile];
+    let matchedName = null;
+
+    for (let name in PRESETS) {
+      let pr = PRESETS[name];
+      if (pr.r === p.r && pr.g === p.g && pr.b === p.b && pr.sat === p.sat) {
+        matchedName = name;
+        break;
+      }
+    }
+
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    if (matchedName) {
+      let activeBtn = document.getElementById(`preset-${matchedName}`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+  }
+
   function applyPreset(name) {
     let p = PRESETS[name];
     if (!p) return;
-
-    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`preset-${name}`).classList.add('active');
 
     document.getElementById('slider-r').value = p.r;
     document.getElementById('slider-g').value = p.g;
     document.getElementById('slider-b').value = p.b;
     document.getElementById('slider-sat').value = p.sat;
 
-    onSliderChange();
-    applySettings();
+    onSliderInput();
+    applySettings(true);
     showToast(`Applied ${name.charAt(0).toUpperCase() + name.slice(1)} preset`);
   }
 
@@ -468,7 +484,7 @@
     document.getElementById('slider-g').value = p.g;
     document.getElementById('slider-b').value = p.b;
     document.getElementById('slider-sat').value = p.sat;
-    onSliderChange();
+    onSliderInput();
   }
 
   function computeMatrix(r, g, b, sat) {
@@ -485,7 +501,8 @@
     ];
   }
 
-  function onSliderChange() {
+  let debounceTimer = null;
+  function onSliderInput() {
     let r = parseInt(document.getElementById('slider-r').value);
     let g = parseInt(document.getElementById('slider-g').value);
     let b = parseInt(document.getElementById('slider-b').value);
@@ -501,12 +518,19 @@
     let swatch = document.getElementById('swatch');
     swatch.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
     swatch.style.color = (r + g + b) / 3 > 180 ? '#131217' : '#f4f3f8';
+
+    updatePresetButtonState();
+
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => { applySettings(false); }, 100);
   }
 
   async function refreshStats() {
     try {
       let resModel = await exec("getprop ro.product.model");
-      if (resModel.stdout) document.getElementById('chip-model').innerHTML = 'Device: <strong>' + resModel.stdout.trim() + '</strong>';
+      if (resModel.stdout && resModel.stdout.trim()) {
+        document.getElementById('chip-model').innerHTML = 'Device: <strong>' + resModel.stdout.trim() + '</strong>';
+      }
 
       let resFps = await exec("dumpsys SurfaceFlinger | grep 'refresh-rate' | head -n 1");
       let m = resFps.stdout.match(/(\d+)\s*Hz/i) || resFps.stdout.match(/(\d+)\.\d+\s*fps/i);
@@ -521,12 +545,12 @@
     } catch (e) {}
   }
 
-  async function applySettings() {
+  async function applySettings(notify) {
     let p = profiles[activeProfile];
     let m = computeMatrix(p.r, p.g, p.b, p.sat);
     let args = m.map(v => `f ${v}`).join(' ');
 
-    showToast("Applying settings...");
+    if (notify) showToast("Applying settings...");
     await exec(`service call SurfaceFlinger 1015 i32 1 ${args}`);
     await exec(`cmd color_display set-saturation ${p.sat}`);
     await exec(`[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo "${p.r} ${p.g} ${p.b}" > /sys/devices/platform/kcal_ctrl.0/kcal`);
@@ -539,17 +563,16 @@
   }
 
   function resetToDefaults() {
-    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('preset-clarity').classList.add('active');
+    profiles[activeProfile] = { r: 246, g: 250, b: 256, sat: 108 };
     document.getElementById('slider-r').value = 246;
     document.getElementById('slider-g').value = 250;
     document.getElementById('slider-b').value = 256;
     document.getElementById('slider-sat').value = 108;
-    onSliderChange();
-    applySettings();
+    onSliderInput();
+    applySettings(true);
   }
 
-  onSliderChange();
+  onSliderInput();
   refreshStats();
 </script>
 </body>
