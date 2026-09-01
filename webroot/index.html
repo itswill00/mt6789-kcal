@@ -364,8 +364,8 @@
   <div class="section-label">Presets</div>
   <div class="card">
     <div class="preset-grid">
-      <button class="preset-btn active" id="preset-natural" onclick="applyPreset('natural')">Natural (60Hz std)</button>
-      <button class="preset-btn" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
+      <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
+      <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
       <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
       <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm</button>
       <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool</button>
@@ -386,17 +386,17 @@
     <div class="slider-row">
       <div class="slider-info">
         <span>Red</span>
-        <span class="slider-val" id="lbl-r">256</span>
+        <span class="slider-val" id="lbl-r">246</span>
       </div>
-      <input type="range" id="slider-r" min="160" max="256" value="256" oninput="onSliderInput()">
+      <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderInput()">
     </div>
 
     <div class="slider-row">
       <div class="slider-info">
         <span>Green</span>
-        <span class="slider-val" id="lbl-g">256</span>
+        <span class="slider-val" id="lbl-g">250</span>
       </div>
-      <input type="range" id="slider-g" min="160" max="256" value="256" oninput="onSliderInput()">
+      <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderInput()">
     </div>
 
     <div class="slider-row">
@@ -412,7 +412,7 @@
         <span>Saturation</span>
         <span class="slider-val" id="lbl-sat">100%</span>
       </div>
-      <input type="range" id="slider-sat" min="60" max="140" value="100" oninput="onSliderInput()">
+      <input type="range" id="slider-sat" min="60" max="100" value="100" oninput="onSliderInput()">
     </div>
 
     <div class="preview-bar" id="preview-bar">Preview</div>
@@ -440,16 +440,16 @@
   let activeProfile = 'global';
   let activeDeviceRate = 'auto';
   let profiles = {
-    global: { r: 256, g: 256, b: 256, sat: 100 },
+    global: { r: 246, g: 250, b: 256, sat: 100 },
     '60':    { r: 256, g: 256, b: 256, sat: 100 },
-    '90':    { r: 246, g: 250, b: 256, sat: 108 },
-    '120':   { r: 246, g: 252, b: 256, sat: 108 }
+    '90':    { r: 246, g: 250, b: 256, sat: 100 },
+    '120':   { r: 246, g: 252, b: 256, sat: 100 }
   };
 
   const PRESETS = {
     natural:   { r: 256, g: 256, b: 256, sat: 100 },
-    clarity:   { r: 246, g: 250, b: 256, sat: 108 },
-    dynamic:   { r: 256, g: 250, b: 244, sat: 110 },
+    clarity:   { r: 246, g: 250, b: 256, sat: 100 },
+    dynamic:   { r: 256, g: 250, b: 244, sat: 100 },
     warm:      { r: 256, g: 246, b: 228, sat: 100 },
     cool:      { r: 248, g: 252, b: 256, sat: 100 },
     antigreen: { r: 256, g: 244, b: 240, sat: 100 }
@@ -612,7 +612,7 @@
     let nr = r / 256.0;
     let ng = g / 256.0;
     let nb = b / 256.0;
-    let s = sat / 100.0;
+    let s = Math.min(sat, 100) / 100.0;
 
     return [
       (nr * (0.2126 + 0.7874 * s)).toFixed(3), 0.000, 0.000, 0.000,
@@ -691,7 +691,7 @@
 
     if (notify) showToast("Applying settings...");
     await exec(`service call SurfaceFlinger 1015 i32 1 ${args}`);
-    await exec(`cmd color_display set-saturation ${p.sat}`);
+    await exec(`cmd color_display set-saturation ${Math.min(p.sat, 100)}`);
     await exec(`[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo "${p.r} ${p.g} ${p.b}" > /sys/devices/platform/kcal_ctrl.0/kcal`);
   }
 
@@ -702,9 +702,9 @@
   }
 
   function resetToDefaults() {
-    profiles[activeProfile] = { r: 256, g: 256, b: 256, sat: 100 };
-    document.getElementById('slider-r').value = 256;
-    document.getElementById('slider-g').value = 256;
+    profiles[activeProfile] = { r: 246, g: 250, b: 256, sat: 100 };
+    document.getElementById('slider-r').value = 246;
+    document.getElementById('slider-g').value = 250;
     document.getElementById('slider-b').value = 256;
     document.getElementById('slider-sat').value = 100;
     onSliderInput();
