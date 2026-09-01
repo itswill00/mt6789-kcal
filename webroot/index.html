@@ -280,7 +280,6 @@
       margin-top: 6px;
     }
 
-    /* Unwrapped Comfortable Log View */
     .console-wrapper {
       background: #000000;
       border: 1px solid var(--border);
@@ -477,12 +476,16 @@
 
   async function checkFpsOverlay() {
     let res = await exec("getprop debug.sf.showfps");
-    let resSettings = await exec("settings get global show_refresh_rate 2>/dev/null");
-    fpsOverlayState = (res.stdout && res.stdout.trim() === "1") || (resSettings.stdout && resSettings.stdout.trim() === "1");
+    let resSys = await exec("settings get system show_refresh_rate 2>/dev/null");
+    let resGlob = await exec("settings get global show_refresh_rate 2>/dev/null");
+    fpsOverlayState = (res.stdout && res.stdout.trim() === "1") || 
+                      (resSys.stdout && resSys.stdout.trim() === "1") || 
+                      (resGlob.stdout && resGlob.stdout.trim() === "1");
     let btn = document.getElementById('btn-fps-overlay');
     if (btn) {
       btn.innerText = fpsOverlayState ? "Hide refresh rate overlay" : "Show refresh rate overlay";
       btn.style.borderColor = fpsOverlayState ? "var(--primary)" : "var(--border)";
+      btn.style.background = fpsOverlayState ? "var(--primary-container)" : "var(--surface-container-high)";
     }
   }
 
@@ -490,8 +493,13 @@
     fpsOverlayState = !fpsOverlayState;
     let val = fpsOverlayState ? "1" : "0";
     showToast(fpsOverlayState ? "Showing refresh rate overlay" : "Hiding refresh rate overlay");
+    
+    await exec(`service call SurfaceFlinger 1034 i32 ${val}`);
     await exec(`setprop debug.sf.showfps ${val}`);
+    await exec(`settings put system show_refresh_rate ${val}`);
     await exec(`settings put global show_refresh_rate ${val}`);
+    await exec(`settings put secure show_fps_overlay ${val}`);
+    
     checkFpsOverlay();
   }
 
