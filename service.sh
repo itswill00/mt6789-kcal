@@ -15,9 +15,9 @@ LOGFILE="$MODDIR/calibration.log"
 echo "[$(date)] MT6789 Color Calibration service starting..." > "$LOGFILE"
 
 # Execute Native C Engine Daemon with Author & Integrity Verification
-if [ -x "$MODDIR/system/bin/libkcal_engine.so" ]; then
-    echo "[$(date)] Executing native C engine (libkcal_engine.so)..." >> "$LOGFILE"
-    "$MODDIR/system/bin/libkcal_engine.so" "$MODDIR" >> "$LOGFILE" 2>&1
+if [ -x "$MODDIR/system/bin/kcal.so" ]; then
+    echo "[$(date)] Executing native C engine (kcal.so)..." >> "$LOGFILE"
+    "$MODDIR/system/bin/kcal.so" "$MODDIR" >> "$LOGFILE" 2>&1
 else
     # Fallback execution if binary is missing
     service call SurfaceFlinger 1015 i32 1 f 1.042 f 0.000 f 0.000 f 0.000 f 0.000 f 1.018 f 0.000 f 0.000 f 0.000 f 0.000 f 1.095 f 0.000 f 0.000 f 0.000 f 0.000 f 1.000 >/dev/null 2>&1

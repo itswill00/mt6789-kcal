@@ -64,18 +64,18 @@ clang -O3 -Wall -Werror \
     src/integrity.c \
     src/sha256.c \
     src/log.c \
-    -o system/bin/libkcal_engine.so
+    -o system/bin/kcal.so
 
 mkdir -p "$RELEASE_DIR"
 rm -f "$RELEASE_DIR/$ZIP_OUT"
 
 echo "Packaging ZIP module..."
-chmod 755 service.sh system/bin/libkcal_engine.so
+chmod 755 service.sh system/bin/kcal.so
 
 zip -r "$RELEASE_DIR/$ZIP_OUT" \
     module.prop \
     service.sh \
-    system/bin/libkcal_engine.so \
+    system/bin/kcal.so \
     webroot/index.html >/dev/null
 
 cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/DisplayColorCalibration_Magisk.zip"
