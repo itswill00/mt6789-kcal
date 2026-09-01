@@ -92,3 +92,27 @@ cp "$RELEASE_DIR/$ZIP_OUT" "$INTERNAL_DIR/$ZIP_OUT"
 cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/$ZIP_OUT" 2>/dev/null || true
 
 echo "Build finished cleanly: ${INTERNAL_DIR}/${ZIP_OUT}"
+
+# Live deploy support without rebooting
+if [ "$1" = "--deploy" ] || [ "$1" = "-d" ]; then
+    echo "Deploying to live device module..."
+    if su -c "
+        pkill -9 -x kcal.so 2>/dev/null || true
+        MOD_TARGET=\"/data/adb/modules/mt6789-kcal\"
+        if [ -d \"\$MOD_TARGET\" ]; then
+            mkdir -p \$MOD_TARGET/system/bin \$MOD_TARGET/webroot
+            cp system/bin/kcal.so \$MOD_TARGET/system/bin/kcal.so
+            cp webroot/index.html \$MOD_TARGET/webroot/index.html
+            cp module.prop \$MOD_TARGET/module.prop
+            cp service.sh \$MOD_TARGET/service.sh
+            chmod 755 \$MOD_TARGET/system/bin/*
+            chmod 755 \$MOD_TARGET/service.sh
+            exec \$MOD_TARGET/system/bin/kcal.so \$MOD_TARGET
+        fi
+    "; then
+        echo "Live deploy completed & module restarted successfully"
+    else
+        echo "error: deploy failed"
+        exit 1
+    fi
+fi
