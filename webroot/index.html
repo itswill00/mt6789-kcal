@@ -364,8 +364,8 @@
   <div class="section-label">Presets</div>
   <div class="card">
     <div class="preset-grid">
-      <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
-      <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
+      <button class="preset-btn active" id="preset-natural" onclick="applyPreset('natural')">Natural (60Hz std)</button>
+      <button class="preset-btn" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
       <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
       <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm</button>
       <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool</button>
@@ -386,17 +386,17 @@
     <div class="slider-row">
       <div class="slider-info">
         <span>Red</span>
-        <span class="slider-val" id="lbl-r">246</span>
+        <span class="slider-val" id="lbl-r">256</span>
       </div>
-      <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderInput()">
+      <input type="range" id="slider-r" min="160" max="256" value="256" oninput="onSliderInput()">
     </div>
 
     <div class="slider-row">
       <div class="slider-info">
         <span>Green</span>
-        <span class="slider-val" id="lbl-g">250</span>
+        <span class="slider-val" id="lbl-g">256</span>
       </div>
-      <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderInput()">
+      <input type="range" id="slider-g" min="160" max="256" value="256" oninput="onSliderInput()">
     </div>
 
     <div class="slider-row">
@@ -410,9 +410,9 @@
     <div class="slider-row">
       <div class="slider-info">
         <span>Saturation</span>
-        <span class="slider-val" id="lbl-sat">108%</span>
+        <span class="slider-val" id="lbl-sat">100%</span>
       </div>
-      <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderInput()">
+      <input type="range" id="slider-sat" min="60" max="140" value="100" oninput="onSliderInput()">
     </div>
 
     <div class="preview-bar" id="preview-bar">Preview</div>
@@ -440,14 +440,14 @@
   let activeProfile = 'global';
   let activeDeviceRate = 'auto';
   let profiles = {
-    global: { r: 246, g: 250, b: 256, sat: 108 },
-    '60':    { r: 246, g: 248, b: 256, sat: 108 },
+    global: { r: 256, g: 256, b: 256, sat: 100 },
+    '60':    { r: 256, g: 256, b: 256, sat: 100 },
     '90':    { r: 246, g: 250, b: 256, sat: 108 },
     '120':   { r: 246, g: 252, b: 256, sat: 108 }
   };
 
   const PRESETS = {
-    natural:   { r: 256, g: 254, b: 250, sat: 100 },
+    natural:   { r: 256, g: 256, b: 256, sat: 100 },
     clarity:   { r: 246, g: 250, b: 256, sat: 108 },
     dynamic:   { r: 256, g: 250, b: 244, sat: 110 },
     warm:      { r: 256, g: 246, b: 228, sat: 100 },
@@ -702,11 +702,11 @@
   }
 
   function resetToDefaults() {
-    profiles[activeProfile] = { r: 246, g: 250, b: 256, sat: 108 };
-    document.getElementById('slider-r').value = 246;
-    document.getElementById('slider-g').value = 250;
+    profiles[activeProfile] = { r: 256, g: 256, b: 256, sat: 100 };
+    document.getElementById('slider-r').value = 256;
+    document.getElementById('slider-g').value = 256;
     document.getElementById('slider-b').value = 256;
-    document.getElementById('slider-sat').value = 108;
+    document.getElementById('slider-sat').value = 100;
     onSliderInput();
     applySettings(true);
   }

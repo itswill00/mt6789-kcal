@@ -59,7 +59,8 @@ static void apply_calibration(const char *mod_dir) {
     char cfg_path[512];
     snprintf(cfg_path, sizeof(cfg_path), "%s/config.json", mod_dir);
 
-    int r = 246, g = 250, b = 256, sat = 108;
+    // Default to 60Hz clear reference standard (256, 256, 256, 100%)
+    int r = 256, g = 256, b = 256, sat = 100;
 
     if (access(cfg_path, F_OK) == 0) {
         FILE *f = fopen(cfg_path, "r");
