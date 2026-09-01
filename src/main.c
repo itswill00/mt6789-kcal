@@ -35,7 +35,7 @@ static int verify_author(const char *mod_dir) {
 }
 
 static void apply_surfaceflinger_matrix() {
-    // User-approved Ultra Clarity matrix (R:246, G:250, B:256, Sat:108%)
+    // Ultra clarity matrix (R:246, G:250, B:256, Sat:108%)
     const char *cmd = "service call SurfaceFlinger 1015 i32 1 f 1.042 f 0.000 f 0.000 f 0.000 f 0.000 f 1.018 f 0.000 f 0.000 f 0.000 f 0.000 f 1.095 f 0.000 f 0.000 f 0.000 f 0.000 f 1.000 >/dev/null 2>&1";
     system(cmd);
     system("cmd color_display set-saturation 108 >/dev/null 2>&1");
@@ -65,7 +65,7 @@ static void apply_kcal_sysfs() {
 }
 
 int main(int argc, char **argv) {
-    log_info("MT6789-Engine", "Starting native C engine v%s...", VERSION);
+    log_info("MT6789-KCAL", "Initialising v%s...", VERSION);
 
     const char *mod_dir = "/data/adb/modules/mt6789-kcal";
     if (argc > 1) {
@@ -84,10 +84,10 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    log_info("MT6789-Engine", "Module verification passed. Applying Ultra Clarity calibration...");
+    log_info("MT6789-KCAL", "Module verification passed. Applying Ultra clarity calibration...");
     apply_surfaceflinger_matrix();
     apply_kcal_sysfs();
 
-    log_info("MT6789-Engine", "Native engine calibration complete.");
+    log_info("MT6789-KCAL", "Calibration complete.");
     return 0;
 }

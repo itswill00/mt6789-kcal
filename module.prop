@@ -1,6 +1,6 @@
 id=mt6789-kcal
-name=MediaTek MT6789 Color Calibration & KCAL Engine
+name=MediaTek MT6789 Display Calibration
 version=v1.0.0
 versionCode=100
 author=itswill00
-description=Hardware display color matrix calibration and KernelSU WebUI analyzer for MT6789 / MediaTek devices.
+description=Display color calibration and KernelSU WebUI for MediaTek MT6789 devices.

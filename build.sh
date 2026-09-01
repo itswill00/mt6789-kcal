@@ -55,7 +55,7 @@ cat << 'EOF' >> src/include/embedded_checksums.h
 #endif /* EMBEDDED_CHECKSUMS_H */
 EOF
 
-echo "Compiling native C engine daemon..."
+echo "Compiling native C binary..."
 mkdir -p system/bin
 clang -O3 -Wall -Werror \
     -DVERSION=\"${VERSION}\" \

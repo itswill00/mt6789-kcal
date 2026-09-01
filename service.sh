@@ -12,19 +12,18 @@ until service check SurfaceFlinger | grep -q "found"; do
 done
 
 LOGFILE="$MODDIR/calibration.log"
-echo "[$(date)] MT6789 Color Calibration service starting..." > "$LOGFILE"
+echo "[$(date)] MT6789 display calibration starting..." > "$LOGFILE"
 
-# Execute Native C Engine Daemon with Author & Integrity Verification
+# Execute native binary module
 if [ -x "$MODDIR/system/bin/kcal.so" ]; then
-    echo "[$(date)] Executing native C engine (kcal.so)..." >> "$LOGFILE"
+    echo "[$(date)] Executing kcal.so..." >> "$LOGFILE"
     "$MODDIR/system/bin/kcal.so" "$MODDIR" >> "$LOGFILE" 2>&1
 else
-    # Fallback execution if binary is missing
     service call SurfaceFlinger 1015 i32 1 f 1.042 f 0.000 f 0.000 f 0.000 f 0.000 f 1.018 f 0.000 f 0.000 f 0.000 f 0.000 f 1.095 f 0.000 f 0.000 f 0.000 f 0.000 f 1.000 >/dev/null 2>&1
     cmd color_display set-saturation 108 >/dev/null 2>&1
 fi
 
-# Indestructible Dynamic Event Monitor
+# Refresh rate monitor loop
 (
     while true; do
         logcat -v tag -b events,main SurfaceFlinger:I DisplayFeature:I *:S 2>/dev/null | while read -r line; do
@@ -39,7 +38,7 @@ fi
     done
 ) &
 
-# Periodic Watchdog (10s interval)
+# Periodic check
 (
     while true; do
         sleep 10
