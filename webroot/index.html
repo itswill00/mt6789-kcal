@@ -472,6 +472,26 @@
     });
   }
 
+  async function loadSavedConfig() {
+    try {
+      let res = await exec("cat /data/adb/modules/mt6789-kcal/config.json 2>/dev/null");
+      if (res.stdout && res.stdout.trim().startsWith('{')) {
+        let saved = JSON.parse(res.stdout.trim());
+        if (saved.global) profiles.global = saved.global;
+        if (saved['60']) profiles['60'] = saved['60'];
+        if (saved['90']) profiles['90'] = saved['90'];
+        if (saved['120']) profiles['120'] = saved['120'];
+        
+        let cur = profiles[activeProfile];
+        document.getElementById('slider-r').value = cur.r;
+        document.getElementById('slider-g').value = cur.g;
+        document.getElementById('slider-b').value = cur.b;
+        document.getElementById('slider-sat').value = cur.sat;
+        onSliderInput();
+      }
+    } catch (e) {}
+  }
+
   async function checkFpsOverlay() {
     let res = await exec("getprop debug.sf.showfps");
     let resSys = await exec("settings get system show_refresh_rate 2>/dev/null");
@@ -641,8 +661,10 @@
     applySettings(true);
   }
 
-  onSliderInput();
-  refreshStats();
+  loadSavedConfig().then(() => {
+    onSliderInput();
+    refreshStats();
+  });
 </script>
 </body>
 </html>

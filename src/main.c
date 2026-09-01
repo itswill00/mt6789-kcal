@@ -34,14 +34,58 @@ static int verify_author(const char *mod_dir) {
     return author_matched ? 0 : 1;
 }
 
-static void apply_surfaceflinger_matrix() {
-    // Ultra clarity matrix (R:246, G:250, B:256, Sat:108%)
-    const char *cmd = "service call SurfaceFlinger 1015 i32 1 f 1.042 f 0.000 f 0.000 f 0.000 f 0.000 f 1.018 f 0.000 f 0.000 f 0.000 f 0.000 f 1.095 f 0.000 f 0.000 f 0.000 f 0.000 f 1.000 >/dev/null 2>&1";
+static void compute_and_apply_matrix(int r, int g, int b, int sat) {
+    float nr = r / 256.0f;
+    float ng = g / 256.0f;
+    float nb = b / 256.0f;
+    float s = sat / 100.0f;
+
+    float m00 = nr * (0.2126f + 0.7874f * s);
+    float m11 = ng * (0.7152f + 0.2848f * s);
+    float m22 = nb * (0.0722f + 0.9278f * s);
+
+    char cmd[512];
+    snprintf(cmd, sizeof(cmd),
+        "service call SurfaceFlinger 1015 i32 1 f %.3f f 0.000 f 0.000 f 0.000 f 0.000 f %.3f f 0.000 f 0.000 f 0.000 f 0.000 f %.3f f 0.000 f 0.000 f 0.000 f 0.000 f 1.000 >/dev/null 2>&1",
+        m00, m11, m22);
     system(cmd);
-    system("cmd color_display set-saturation 108 >/dev/null 2>&1");
+
+    char sat_cmd[128];
+    snprintf(sat_cmd, sizeof(sat_cmd), "cmd color_display set-saturation %d >/dev/null 2>&1", sat);
+    system(sat_cmd);
 }
 
-static void apply_kcal_sysfs() {
+static void apply_calibration(const char *mod_dir) {
+    char cfg_path[512];
+    snprintf(cfg_path, sizeof(cfg_path), "%s/config.json", mod_dir);
+
+    int r = 246, g = 250, b = 256, sat = 108;
+
+    if (access(cfg_path, F_OK) == 0) {
+        FILE *f = fopen(cfg_path, "r");
+        if (f) {
+            char buf[2048];
+            size_t bytes = fread(buf, 1, sizeof(buf) - 1, f);
+            buf[bytes] = '\0';
+            fclose(f);
+
+            char *glob = strstr(buf, "\"global\"");
+            if (glob) {
+                char *pr = strstr(glob, "\"r\"");
+                char *pg = strstr(glob, "\"g\"");
+                char *pb = strstr(glob, "\"b\"");
+                char *ps = strstr(glob, "\"sat\"");
+
+                if (pr) r = atoi(pr + 4);
+                if (pg) g = atoi(pg + 4);
+                if (pb) b = atoi(pb + 4);
+                if (ps) sat = atoi(ps + 6);
+            }
+        }
+    }
+
+    compute_and_apply_matrix(r, g, b, sat);
+
     const char *nodes[] = {
         "/sys/devices/platform/kcal_ctrl.0/kcal",
         "/sys/module/kcal_val/parameters/rgb",
@@ -53,7 +97,7 @@ static void apply_kcal_sysfs() {
     for (int i = 0; nodes[i] != NULL; i++) {
         if (access(nodes[i], F_OK) == 0) {
             char cmd[256];
-            snprintf(cmd, sizeof(cmd), "chmod 664 %s 2>/dev/null; echo '246 250 256' > %s 2>/dev/null", nodes[i], nodes[i]);
+            snprintf(cmd, sizeof(cmd), "chmod 664 %s 2>/dev/null; echo '%d %d %d' > %s 2>/dev/null", nodes[i], r, g, b, nodes[i]);
             system(cmd);
             break;
         }
@@ -84,9 +128,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    log_info("MT6789-KCAL", "Module verification passed. Applying Ultra clarity calibration...");
-    apply_surfaceflinger_matrix();
-    apply_kcal_sysfs();
+    log_info("MT6789-KCAL", "Module verification passed. Applying calibration...");
+    apply_calibration(mod_dir);
 
     log_info("MT6789-KCAL", "Calibration complete.");
     return 0;
