@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display calibration</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --text: #c9d1d9;
+            --muted: #8b949e;
+            --radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px 16px;
+            max-width: 640px;
+            margin: 0 auto;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            letter-spacing: -0.3px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #1f6feb22;
+            color: var(--accent);
+            border: 1px solid #1f6feb44;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .meta-box {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+
+        .meta-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .meta-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #f0f6fc;
+            margin-top: 2px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 7px 0;
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab.active {
+            background: #21262d;
+            color: #f0f6fc;
+            border-color: #8b949e;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 8px 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .preset-btn:hover, .preset-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #1f6feb11;
+        }
+
+        .control-group {
+            margin-bottom: 16px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .control-val {
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            color: var(--accent);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #30363d;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .swatch {
+            height: 36px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin: 14px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .matrix-view {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background: #0d1117;
+            border: 1px solid #21262d;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 0.7rem;
+            text-align: center;
+        }
+
+        .matrix-cell {
+            padding: 4px;
+            color: #79c0ff;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        button {
+            padding: 9px 12px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .btn-primary {
+            background: #238636;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #2ea043;
+        }
+
+        .btn-secondary {
+            background: #21262d;
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #30363d;
+        }
+
+        .btn-full {
+            grid-column: span 2;
+        }
+
+        pre.logs {
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 0.7rem;
+            background: #0d1117;
+            color: #7ee787;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #21262d;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Display calibration</h1>
+    </div>
+    <span class="badge" id="rate-badge">120 Hz</span>
+</header>
+
+<div class="card">
+    <div class="card-header">
+        <span>System diagnostics</span>
+        <span style="font-size: 0.75rem; color: var(--accent); cursor: pointer;" onclick="refreshStats()">Refresh</span>
+    </div>
+    <div class="grid-2x2">
+        <div class="meta-box">
+            <div class="meta-label">Device</div>
+            <div class="meta-value" id="info-model">--</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">Platform</div>
+            <div class="meta-value" id="info-soc">MT6789</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">Refresh rate</div>
+            <div class="meta-value" id="info-fps">--</div>
+        </div>
+        <div class="meta-box">
+            <div class="meta-label">KCAL driver</div>
+            <div class="meta-value" id="info-kcal">--</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Calibration presets</div>
+    <div class="preset-grid">
+        <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
+        <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
+        <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
+        <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm comfort</button>
+        <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool crisp</button>
+        <button class="preset-btn" id="preset-antigreen" onclick="applyPreset('antigreen')">Anti-green fix</button>
+    </div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" id="tab-global" onclick="setProfile('global')">Global</div>
+    <div class="tab" id="tab-60" onclick="setProfile('60')">60Hz</div>
+    <div class="tab" id="tab-90" onclick="setProfile('90')">90Hz</div>
+    <div class="tab" id="tab-120" onclick="setProfile('120')">120Hz</div>
+</div>
+
+<div class="card">
+    <div class="card-header">Custom balance tuning</div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Red channel</span>
+            <span class="control-val" id="val-r">246</span>
+        </div>
+        <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
+    </div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Green channel</span>
+            <span class="control-val" id="val-g">250</span>
+        </div>
+        <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
+    </div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Blue channel</span>
+            <span class="control-val" id="val-b">256</span>
+        </div>
+        <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
+    </div>
+
+    <div class="control-group">
+        <div class="control-label">
+            <span>Saturation</span>
+            <span class="control-val" id="val-sat">108%</span>
+        </div>
+        <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
+    </div>
+
+    <div class="swatch" id="swatch">Color temperature preview</div>
+
+    <div class="card-header" style="font-size: 0.75rem; color: var(--muted);">SurfaceFlinger 4x4 matrix</div>
+    <div class="matrix-view" id="matrix"></div>
+
+    <div class="actions">
+        <button class="btn-primary" onclick="applySettings()">Apply live</button>
+        <button class="btn-secondary" onclick="saveSettings()">Save configuration</button>
+        <button class="btn-secondary btn-full" onclick="resetToDefaults()">Reset to default</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Service log</div>
+    <pre class="logs" id="log-text">Initialising...</pre>
+</div>
+
+<script>
+    let activeProfile = 'global';
+    let profiles = {
+        global: { r: 246, g: 250, b: 256, sat: 108 },
+        '60':    { r: 246, g: 248, b: 256, sat: 108 },
+        '90':    { r: 246, g: 250, b: 256, sat: 108 },
+        '120':   { r: 246, g: 252, b: 256, sat: 108 }
+    };
+
+    const PRESETS = {
+        natural:   { r: 256, g: 254, b: 250, sat: 100 },
+        clarity:   { r: 246, g: 250, b: 256, sat: 108 },
+        dynamic:   { r: 256, g: 250, b: 244, sat: 110 },
+        warm:      { r: 256, g: 246, b: 228, sat: 100 },
+        cool:      { r: 248, g: 252, b: 256, sat: 100 },
+        antigreen: { r: 256, g: 244, b: 240, sat: 100 }
+    };
+
+    let cbId = 0;
+    function exec(cmd) {
+        return new Promise((resolve) => {
+            if (typeof ksu !== 'undefined' && ksu.exec) {
+                let name = `cb_${Date.now()}_${cbId++}`;
+                window[name] = (errno, stdout, stderr) => {
+                    delete window[name];
+                    resolve({ errno, stdout, stderr });
+                };
+                ksu.exec(cmd, "{}", name);
+            } else {
+                resolve({ errno: 0, stdout: "Simulated execution", stderr: "" });
+            }
+        });
+    }
+
+    function notify(msg) {
+        if (typeof ksu !== 'undefined' && ksu.toast) ksu.toast(msg);
+    }
+
+    function applyPreset(name) {
+        let p = PRESETS[name];
+        if (!p) return;
+
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`preset-${name}`).classList.add('active');
+
+        document.getElementById('slider-r').value = p.r;
+        document.getElementById('slider-g').value = p.g;
+        document.getElementById('slider-b').value = p.b;
+        document.getElementById('slider-sat').value = p.sat;
+
+        onSliderChange();
+        applySettings();
+        notify(`Applied ${name.charAt(0).toUpperCase() + name.slice(1)} preset`);
+    }
+
+    function setProfile(name) {
+        activeProfile = name;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(`tab-${name}`).classList.add('active');
+
+        let p = profiles[name];
+        document.getElementById('slider-r').value = p.r;
+        document.getElementById('slider-g').value = p.g;
+        document.getElementById('slider-b').value = p.b;
+        document.getElementById('slider-sat').value = p.sat;
+        onSliderChange();
+    }
+
+    function computeMatrix(r, g, b, sat) {
+        let nr = r / 256.0;
+        let ng = g / 256.0;
+        let nb = b / 256.0;
+        let s = sat / 100.0;
+
+        return [
+            (nr * (0.2126 + 0.7874 * s)).toFixed(3), 0.000, 0.000, 0.000,
+            0.000, (ng * (0.7152 + 0.2848 * s)).toFixed(3), 0.000, 0.000,
+            0.000, 0.000, (nb * (0.0722 + 0.9278 * s)).toFixed(3), 0.000,
+            0.000, 0.000, 0.000, 1.000
+        ];
+    }
+
+    function onSliderChange() {
+        let r = parseInt(document.getElementById('slider-r').value);
+        let g = parseInt(document.getElementById('slider-g').value);
+        let b = parseInt(document.getElementById('slider-b').value);
+        let sat = parseInt(document.getElementById('slider-sat').value);
+
+        profiles[activeProfile] = { r, g, b, sat };
+
+        document.getElementById('val-r').innerText = r;
+        document.getElementById('val-g').innerText = g;
+        document.getElementById('val-b').innerText = b;
+        document.getElementById('val-sat').innerText = sat + '%';
+
+        let swatch = document.getElementById('swatch');
+        swatch.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        swatch.style.color = (r + g + b) / 3 > 180 ? '#0d1117' : '#f0f6fc';
+
+        let m = computeMatrix(r, g, b, sat);
+        document.getElementById('matrix').innerHTML = m.map(v => `<div class="matrix-cell">${v}</div>`).join('');
+    }
+
+    async function refreshStats() {
+        try {
+            let resModel = await exec("getprop ro.product.model");
+            if (resModel.stdout) document.getElementById('info-model').innerText = resModel.stdout.trim();
+
+            let resSoc = await exec("getprop ro.board.platform");
+            if (resSoc.stdout) document.getElementById('info-soc').innerText = resSoc.stdout.trim();
+
+            let resFps = await exec("dumpsys SurfaceFlinger | grep 'refresh-rate' | head -n 1");
+            let m = resFps.stdout.match(/(\d+)\s*Hz/i) || resFps.stdout.match(/(\d+)\.\d+\s*fps/i);
+            let fps = m ? m[1] : '120';
+            document.getElementById('info-fps').innerText = fps + ' Hz';
+            document.getElementById('rate-badge').innerText = fps + ' Hz';
+
+            let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'Present' || echo 'Not Found'");
+            document.getElementById('info-kcal').innerText = resKcal.stdout.trim();
+
+            let resLog = await exec("cat /data/adb/modules/mt6789-kcal/calibration.log 2>/dev/null || echo 'Service active.'");
+            document.getElementById('log-text').innerText = resLog.stdout.trim();
+        } catch (e) {}
+    }
+
+    async function applySettings() {
+        let p = profiles[activeProfile];
+        let m = computeMatrix(p.r, p.g, p.b, p.sat);
+        let args = m.map(v => `f ${v}`).join(' ');
+
+        notify("Applying color settings...");
+        await exec(`service call SurfaceFlinger 1015 i32 1 ${args}`);
+        await exec(`[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo "${p.r} ${p.g} ${p.b}" > /sys/devices/platform/kcal_ctrl.0/kcal`);
+    }
+
+    async function saveSettings() {
+        let jsonStr = JSON.stringify(profiles, null, 2);
+        let res = await exec(`echo '${jsonStr}' > /data/adb/modules/mt6789-kcal/config.json`);
+        if (res.errno === 0) notify("Configuration saved");
+    }
+
+    function resetToDefaults() {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('preset-clarity').classList.add('active');
+        document.getElementById('slider-r').value = 246;
+        document.getElementById('slider-g').value = 250;
+        document.getElementById('slider-b').value = 256;
+        document.getElementById('slider-sat').value = 108;
+        onSliderChange();
+        applySettings();
+    }
+
+    onSliderChange();
+    refreshStats();
+</script>
+</body>
+</html>
