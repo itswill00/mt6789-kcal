@@ -4,9 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#131217">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>mt6789-kcal</title>
   <style>
+    @import url('https://mui.kernelsu.org/internal/insets.css');
+    @import url('https://mui.kernelsu.org/internal/colors.css');
+
     :root {
       --bg: #131217;
       --surface: #1a1920;
@@ -33,29 +37,41 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      background-color: var(--bg);
+      background: var(--bg);
+      height: 100%;
+      width: 100%;
+    }
+
     body {
       background-color: var(--bg);
+      background: var(--bg);
       color: var(--on-surface);
-      padding: 16px;
-      max-width: 600px;
+      padding: 0;
       margin: 0 auto;
+      max-width: 520px;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
     .page-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg);
+      padding: calc(14px + var(--window-inset-top, env(safe-area-inset-top, 0px))) 16px 12px 16px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding: 4px 2px;
     }
 
     .page-header-title {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--on-surface);
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
     }
 
     .page-header-sub {
@@ -75,14 +91,18 @@
       font-family: var(--font-mono);
     }
 
+    .content-area {
+      padding: 14px 16px calc(24px + var(--window-inset-bottom, env(safe-area-inset-bottom, 0px))) 16px;
+    }
+
     .hero-card {
       position: relative;
       border-radius: var(--radius-lg);
       background: linear-gradient(135deg, #1c1a24 0%, #15131b 100%);
       border: 1px solid var(--border);
       padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      margin-bottom: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       overflow: hidden;
     }
 
@@ -126,7 +146,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .card-title {
@@ -166,7 +186,7 @@
     .tabs {
       display: flex;
       gap: 6px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .tab {
@@ -342,89 +362,93 @@
   <span class="badge-pill" id="version-badge">v1.0.0</span>
 </div>
 
-<div class="hero-card">
-  <div class="hero-title">MediaTek MT6789 Display Calibration</div>
-  <div class="hero-sub">Hardware Color Matrix & KernelSU Tuning Interface</div>
-  <div class="stats-row">
-    <div class="chip" id="chip-model">Device: --</div>
-    <div class="chip" id="chip-soc">SoC: MT6789</div>
-    <div class="chip" id="chip-fps">FPS: -- Hz</div>
-    <div class="chip" id="chip-kcal">KCAL: --</div>
-  </div>
-</div>
+<div class="content-area">
 
-<div class="card">
-  <div class="card-title">Calibration presets</div>
-  <div class="preset-grid">
-    <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
-    <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
-    <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
-    <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm comfort</button>
-    <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool crisp</button>
-    <button class="preset-btn" id="preset-antigreen" onclick="applyPreset('antigreen')">Anti-green fix</button>
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tab active" id="tab-global" onclick="setProfile('global')">Global</div>
-  <div class="tab" id="tab-60" onclick="setProfile('60')">60Hz</div>
-  <div class="tab" id="tab-90" onclick="setProfile('90')">90Hz</div>
-  <div class="tab" id="tab-120" onclick="setProfile('120')">120Hz</div>
-</div>
-
-<div class="card">
-  <div class="card-title">Custom balance tuning</div>
-
-  <div class="slider-group">
-    <div class="slider-header">
-      <span>Red channel</span>
-      <span class="slider-val" id="val-r">246</span>
+  <div class="hero-card">
+    <div class="hero-title">MediaTek MT6789 Display Calibration</div>
+    <div class="hero-sub">Hardware Color Matrix & KernelSU Tuning Interface</div>
+    <div class="stats-row">
+      <div class="chip" id="chip-model">Device: --</div>
+      <div class="chip" id="chip-soc">SoC: MT6789</div>
+      <div class="chip" id="chip-fps">FPS: -- Hz</div>
+      <div class="chip" id="chip-kcal">KCAL: --</div>
     </div>
-    <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
   </div>
 
-  <div class="slider-group">
-    <div class="slider-header">
-      <span>Green channel</span>
-      <span class="slider-val" id="val-g">250</span>
+  <div class="card">
+    <div class="card-title">Calibration presets</div>
+    <div class="preset-grid">
+      <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
+      <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
+      <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
+      <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm comfort</button>
+      <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool crisp</button>
+      <button class="preset-btn" id="preset-antigreen" onclick="applyPreset('antigreen')">Anti-green fix</button>
     </div>
-    <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
   </div>
 
-  <div class="slider-group">
-    <div class="slider-header">
-      <span>Blue channel</span>
-      <span class="slider-val" id="val-b">256</span>
+  <div class="tabs">
+    <div class="tab active" id="tab-global" onclick="setProfile('global')">Global</div>
+    <div class="tab" id="tab-60" onclick="setProfile('60')">60Hz</div>
+    <div class="tab" id="tab-90" onclick="setProfile('90')">90Hz</div>
+    <div class="tab" id="tab-120" onclick="setProfile('120')">120Hz</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Custom balance tuning</div>
+
+    <div class="slider-group">
+      <div class="slider-header">
+        <span>Red channel</span>
+        <span class="slider-val" id="val-r">246</span>
+      </div>
+      <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
     </div>
-    <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
-  </div>
 
-  <div class="slider-group">
-    <div class="slider-header">
-      <span>Saturation</span>
-      <span class="slider-val" id="val-sat">108%</span>
+    <div class="slider-group">
+      <div class="slider-header">
+        <span>Green channel</span>
+        <span class="slider-val" id="val-g">250</span>
+      </div>
+      <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
     </div>
-    <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
+
+    <div class="slider-group">
+      <div class="slider-header">
+        <span>Blue channel</span>
+        <span class="slider-val" id="val-b">256</span>
+      </div>
+      <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-header">
+        <span>Saturation</span>
+        <span class="slider-val" id="val-sat">108%</span>
+      </div>
+      <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
+    </div>
+
+    <div class="swatch" id="swatch">Color temperature preview</div>
+
+    <div class="card-title" style="font-size: 11px; color: var(--on-surface-variant); margin-top: 10px;">SurfaceFlinger 4x4 matrix</div>
+    <div class="matrix-grid" id="matrix"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="applySettings()">Apply live</button>
+      <button class="btn btn-secondary" onclick="saveSettings()">Save configuration</button>
+      <button class="btn btn-secondary btn-full" onclick="resetToDefaults()">Reset to default</button>
+    </div>
   </div>
 
-  <div class="swatch" id="swatch">Color temperature preview</div>
-
-  <div class="card-title" style="font-size: 11px; color: var(--on-surface-variant); margin-top: 10px;">SurfaceFlinger 4x4 matrix</div>
-  <div class="matrix-grid" id="matrix"></div>
-
-  <div class="actions">
-    <button class="btn btn-primary" onclick="applySettings()">Apply live</button>
-    <button class="btn btn-secondary" onclick="saveSettings()">Save configuration</button>
-    <button class="btn btn-secondary btn-full" onclick="resetToDefaults()">Reset to default</button>
+  <div class="card">
+    <div class="card-title">
+      <span>Service log</span>
+      <span style="font-size: 11px; color: var(--primary); cursor: pointer;" onclick="refreshStats()">Refresh</span>
+    </div>
+    <pre class="logs" id="log-text">Initialising...</pre>
   </div>
-</div>
 
-<div class="card">
-  <div class="card-title">
-    <span>Service log</span>
-    <span style="font-size: 11px; color: var(--primary); cursor: pointer;" onclick="refreshStats()">Refresh</span>
-  </div>
-  <pre class="logs" id="log-text">Initialising...</pre>
 </div>
 
 <div class="toast-pill" id="toast-pill">Notification</div>
