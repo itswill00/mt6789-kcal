@@ -2,6 +2,7 @@
 
 PROJECT_DIR="/data/data/com.termux/files/home/mt6789-kcal"
 RELEASE_DIR="/data/data/com.termux/files/home/mt6789-kcal/release"
+INTERNAL_DIR="/sdcard/mt6789-kcal"
 
 set -e
 
@@ -68,7 +69,7 @@ clang -O3 -Wall -Werror \
     -o system/bin/kcal.so
 
 mkdir -p "$RELEASE_DIR"
-rm -f "$RELEASE_DIR/$ZIP_OUT"
+rm -f "$RELEASE_DIR"/*.zip
 
 echo "Packaging ZIP module..."
 chmod 755 service.sh system/bin/kcal.so
@@ -79,7 +80,15 @@ zip -r "$RELEASE_DIR/$ZIP_OUT" \
     system/bin/kcal.so \
     webroot/index.html >/dev/null
 
-cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/$ZIP_OUT"
-cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/$ZIP_OUT"
+# Internal storage output handling (clean up previous builds to avoid duplicates)
+mkdir -p "$INTERNAL_DIR"
+rm -f "$INTERNAL_DIR"/mt6789-kcal*.zip
+rm -f /sdcard/Apktool_M/mt6789-kcal*.zip 2>/dev/null || true
+rm -f /sdcard/mt6789-kcal*.zip 2>/dev/null || true
+rm -f /sdcard/DisplayColorCalibration_Magisk.zip 2>/dev/null || true
+rm -f /sdcard/Apktool_M/DisplayColorCalibration_Magisk.zip 2>/dev/null || true
 
-echo "Build finished: ${RELEASE_DIR}/${ZIP_OUT}"
+cp "$RELEASE_DIR/$ZIP_OUT" "$INTERNAL_DIR/$ZIP_OUT"
+cp "$RELEASE_DIR/$ZIP_OUT" "/sdcard/Apktool_M/$ZIP_OUT" 2>/dev/null || true
+
+echo "Build finished cleanly: ${INTERNAL_DIR}/${ZIP_OUT}"
