@@ -9,7 +9,7 @@ typedef struct {
 static const file_checksum_t g_embedded_checksums[] = {
     { "service.sh", "9aac183e13a46a1fd2309db2a3aebe676ffbfe4cc44f070dc53fd9d7ce8e0419" },
     { "module.prop", "2cf91ed48d01f2fe73905e97ef21d277590256075c6d079d2ba91d847d109d9c" },
-    { "webroot/index.html", "933594ee40fc27b2089fd24f916742db8fdbaa41ca0c4a7755ee8e848d7c6e54" },
+    { "webroot/index.html", "83ba8863dce5494d167a495f79258bf33da0487b4ee05abf12c0b7f3a7a306a5" },
 };
 
 #endif /* EMBEDDED_CHECKSUMS_H */

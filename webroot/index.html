@@ -24,9 +24,9 @@
       --on-surface-variant: #a9a4b8;
       --border: rgba(255, 255, 255, 0.08);
       --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
     }
 
     * {
@@ -50,17 +50,18 @@
       color: var(--on-surface);
       padding: 0;
       margin: 0 auto;
-      max-width: 520px;
+      max-width: 480px;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Sticky Compact Header */
     .page-header {
       position: sticky;
       top: 0;
       z-index: 30;
       background: var(--bg);
-      padding: calc(14px + var(--window-inset-top, env(safe-area-inset-top, 0px))) 16px 12px 16px;
+      padding: calc(10px + var(--window-inset-top, env(safe-area-inset-top, 0px))) 14px 10px 14px;
       border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
@@ -68,23 +69,22 @@
     }
 
     .page-header-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 800;
       color: var(--on-surface);
       letter-spacing: -0.3px;
     }
 
     .page-header-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--on-surface-variant);
-      margin-top: 1px;
     }
 
     .badge-pill {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 20px;
+      padding: 3px 8px;
+      border-radius: 12px;
       background: var(--primary-container);
       color: var(--on-primary-container);
       border: 1px solid rgba(155, 135, 245, 0.3);
@@ -92,88 +92,74 @@
     }
 
     .content-area {
-      padding: 14px 16px calc(24px + var(--window-inset-bottom, env(safe-area-inset-bottom, 0px))) 16px;
+      padding: 10px 12px calc(20px + var(--window-inset-bottom, env(safe-area-inset-bottom, 0px))) 12px;
     }
 
-    .hero-card {
-      position: relative;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #1c1a24 0%, #15131b 100%);
+    /* Compact Hero Strip */
+    .hero-strip {
+      background: var(--surface);
       border: 1px solid var(--border);
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-    }
-
-    .hero-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--on-surface);
-      margin-bottom: 2px;
-    }
-
-    .hero-sub {
-      font-size: 11px;
-      color: var(--on-surface-variant);
-      margin-bottom: 12px;
-    }
-
-    .stats-row {
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      margin-bottom: 10px;
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
+      gap: 4px 8px;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .chip {
       font-family: var(--font-mono);
       font-size: 10px;
-      font-weight: 500;
-      padding: 4px 9px;
-      border-radius: var(--radius-sm);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--on-surface);
-      border: 1px solid var(--border);
+      color: var(--on-surface-variant);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
+    .chip strong {
+      color: var(--on-surface);
+    }
+
+    /* Compact Cards */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
     }
 
     .card-title {
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      color: var(--on-surface);
-      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--on-surface-variant);
+      margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
+    /* Presets Grid */
     .preset-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 6px;
     }
 
     .preset-btn {
-      padding: 9px 6px;
-      font-size: 11px;
+      padding: 7px 4px;
+      font-size: 10px;
       font-weight: 600;
       background: var(--surface-container);
       border: 1px solid var(--border);
       color: var(--on-surface-variant);
       border-radius: var(--radius-sm);
       cursor: pointer;
+      text-align: center;
       transition: all 0.15s ease;
     }
 
@@ -183,21 +169,22 @@
       background: var(--primary-container);
     }
 
+    /* Tabs */
     .tabs {
       display: flex;
-      gap: 6px;
-      margin-bottom: 14px;
+      gap: 4px;
+      margin-bottom: 10px;
     }
 
     .tab {
       flex: 1;
-      padding: 8px 0;
+      padding: 6px 0;
       text-align: center;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       color: var(--on-surface-variant);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -209,16 +196,23 @@
       border-color: var(--surface-bright);
     }
 
+    /* Sliders Grid */
+    .slider-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+    }
+
     .slider-group {
-      margin-bottom: 14px;
+      margin-bottom: 6px;
     }
 
     .slider-header {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 10px;
       color: var(--on-surface-variant);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .slider-val {
@@ -229,8 +223,8 @@
 
     input[type="range"] {
       width: 100%;
-      height: 6px;
-      border-radius: 3px;
+      height: 4px;
+      border-radius: 2px;
       background: var(--surface-container-highest);
       outline: none;
       -webkit-appearance: none;
@@ -238,62 +232,63 @@
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
+    /* Swatch & Matrix */
     .swatch {
-      height: 38px;
+      height: 26px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      margin: 14px 0;
+      margin: 8px 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.2px;
     }
 
     .matrix-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
+      gap: 3px;
       background: var(--bg);
       border: 1px solid var(--border);
-      padding: 8px;
+      padding: 6px;
       border-radius: var(--radius-sm);
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9px;
       text-align: center;
     }
 
     .matrix-cell {
-      padding: 4px;
+      padding: 2px;
       color: var(--primary);
       background: var(--surface);
-      border-radius: 4px;
+      border-radius: 3px;
     }
 
+    /* Compact Action Buttons Row */
     .actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 16px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
     }
 
     button.btn {
-      padding: 11px;
+      padding: 8px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
       transition: opacity 0.15s ease;
+      text-align: center;
     }
 
     button.btn:active {
@@ -311,36 +306,32 @@
       border-color: var(--border);
     }
 
-    .btn-full {
-      grid-column: span 2;
-    }
-
     pre.logs {
       font-family: var(--font-mono);
-      font-size: 10px;
+      font-size: 9px;
       background: var(--bg);
       color: #9ece6a;
-      padding: 10px;
+      padding: 8px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      max-height: 120px;
+      max-height: 80px;
       overflow-y: auto;
       white-space: pre-wrap;
     }
 
     .toast-pill {
       position: fixed;
-      bottom: 24px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--surface-container-highest);
       border: 1px solid var(--surface-bright);
       color: var(--on-surface);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 20px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      padding: 6px 14px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       z-index: 99;
       pointer-events: none;
       transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
@@ -364,29 +355,28 @@
 
 <div class="content-area">
 
-  <div class="hero-card">
-    <div class="hero-title">MediaTek MT6789 Display Calibration</div>
-    <div class="hero-sub">Hardware Color Matrix & KernelSU Tuning Interface</div>
-    <div class="stats-row">
-      <div class="chip" id="chip-model">Device: --</div>
-      <div class="chip" id="chip-soc">SoC: MT6789</div>
-      <div class="chip" id="chip-fps">FPS: -- Hz</div>
-      <div class="chip" id="chip-kcal">KCAL: --</div>
-    </div>
+  <!-- Compact Hero Strip -->
+  <div class="hero-strip">
+    <div class="chip" id="chip-model">Device: <strong>--</strong></div>
+    <div class="chip" id="chip-soc">SoC: <strong>MT6789</strong></div>
+    <div class="chip" id="chip-fps">Rate: <strong>-- Hz</strong></div>
+    <div class="chip" id="chip-kcal">KCAL: <strong>--</strong></div>
   </div>
 
+  <!-- Presets Grid -->
   <div class="card">
-    <div class="card-title">Calibration presets</div>
+    <div class="card-title">Presets</div>
     <div class="preset-grid">
       <button class="preset-btn" id="preset-natural" onclick="applyPreset('natural')">Natural</button>
       <button class="preset-btn active" id="preset-clarity" onclick="applyPreset('clarity')">Ultra clarity</button>
       <button class="preset-btn" id="preset-dynamic" onclick="applyPreset('dynamic')">Dynamic</button>
-      <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm comfort</button>
-      <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool crisp</button>
-      <button class="preset-btn" id="preset-antigreen" onclick="applyPreset('antigreen')">Anti-green fix</button>
+      <button class="preset-btn" id="preset-warm" onclick="applyPreset('warm')">Warm</button>
+      <button class="preset-btn" id="preset-cool" onclick="applyPreset('cool')">Cool</button>
+      <button class="preset-btn" id="preset-antigreen" onclick="applyPreset('antigreen')">Anti-green</button>
     </div>
   </div>
 
+  <!-- Rate Tabs -->
   <div class="tabs">
     <div class="tab active" id="tab-global" onclick="setProfile('global')">Global</div>
     <div class="tab" id="tab-60" onclick="setProfile('60')">60Hz</div>
@@ -394,57 +384,61 @@
     <div class="tab" id="tab-120" onclick="setProfile('120')">120Hz</div>
   </div>
 
+  <!-- Custom Tuning -->
   <div class="card">
     <div class="card-title">Custom balance tuning</div>
 
-    <div class="slider-group">
-      <div class="slider-header">
-        <span>Red channel</span>
-        <span class="slider-val" id="val-r">246</span>
+    <div class="slider-grid">
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Red</span>
+          <span class="slider-val" id="val-r">246</span>
+        </div>
+        <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
       </div>
-      <input type="range" id="slider-r" min="160" max="256" value="246" oninput="onSliderChange()">
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Green</span>
+          <span class="slider-val" id="val-g">250</span>
+        </div>
+        <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Blue</span>
+          <span class="slider-val" id="val-b">256</span>
+        </div>
+        <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Saturation</span>
+          <span class="slider-val" id="val-sat">108%</span>
+        </div>
+        <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
+      </div>
     </div>
 
-    <div class="slider-group">
-      <div class="slider-header">
-        <span>Green channel</span>
-        <span class="slider-val" id="val-g">250</span>
-      </div>
-      <input type="range" id="slider-g" min="160" max="256" value="250" oninput="onSliderChange()">
-    </div>
+    <div class="swatch" id="swatch">Color Preview</div>
 
-    <div class="slider-group">
-      <div class="slider-header">
-        <span>Blue channel</span>
-        <span class="slider-val" id="val-b">256</span>
-      </div>
-      <input type="range" id="slider-b" min="160" max="256" value="256" oninput="onSliderChange()">
-    </div>
-
-    <div class="slider-group">
-      <div class="slider-header">
-        <span>Saturation</span>
-        <span class="slider-val" id="val-sat">108%</span>
-      </div>
-      <input type="range" id="slider-sat" min="60" max="140" value="108" oninput="onSliderChange()">
-    </div>
-
-    <div class="swatch" id="swatch">Color temperature preview</div>
-
-    <div class="card-title" style="font-size: 11px; color: var(--on-surface-variant); margin-top: 10px;">SurfaceFlinger 4x4 matrix</div>
+    <div class="card-title" style="font-size: 9px; margin-top: 6px; margin-bottom: 4px;">SurfaceFlinger Matrix</div>
     <div class="matrix-grid" id="matrix"></div>
 
     <div class="actions">
       <button class="btn btn-primary" onclick="applySettings()">Apply live</button>
-      <button class="btn btn-secondary" onclick="saveSettings()">Save configuration</button>
-      <button class="btn btn-secondary btn-full" onclick="resetToDefaults()">Reset to default</button>
+      <button class="btn btn-secondary" onclick="saveSettings()">Save</button>
+      <button class="btn btn-secondary" onclick="resetToDefaults()">Reset</button>
     </div>
   </div>
 
+  <!-- Service Log -->
   <div class="card">
     <div class="card-title">
-      <span>Service log</span>
-      <span style="font-size: 11px; color: var(--primary); cursor: pointer;" onclick="refreshStats()">Refresh</span>
+      <span>Log</span>
+      <span style="font-size: 10px; color: var(--primary); cursor: pointer;" onclick="refreshStats()">Refresh</span>
     </div>
     <pre class="logs" id="log-text">Initialising...</pre>
   </div>
@@ -477,7 +471,7 @@
     p.innerText = msg;
     p.classList.add('visible');
     if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { p.classList.remove('visible'); }, 2200);
+    toastTimer = setTimeout(() => { p.classList.remove('visible'); }, 2000);
     if (typeof ksu !== 'undefined' && ksu.toast) ksu.toast(msg);
   }
 
@@ -565,18 +559,18 @@
   async function refreshStats() {
     try {
       let resModel = await exec("getprop ro.product.model");
-      if (resModel.stdout) document.getElementById('chip-model').innerText = 'Device: ' + resModel.stdout.trim();
+      if (resModel.stdout) document.getElementById('chip-model').innerHTML = 'Device: <strong>' + resModel.stdout.trim() + '</strong>';
 
       let resSoc = await exec("getprop ro.board.platform");
-      if (resSoc.stdout) document.getElementById('chip-soc').innerText = 'SoC: ' + resSoc.stdout.trim();
+      if (resSoc.stdout) document.getElementById('chip-soc').innerHTML = 'SoC: <strong>' + resSoc.stdout.trim() + '</strong>';
 
       let resFps = await exec("dumpsys SurfaceFlinger | grep 'refresh-rate' | head -n 1");
       let m = resFps.stdout.match(/(\d+)\s*Hz/i) || resFps.stdout.match(/(\d+)\.\d+\s*fps/i);
       let fps = m ? m[1] : '120';
-      document.getElementById('chip-fps').innerText = 'FPS: ' + fps + ' Hz';
+      document.getElementById('chip-fps').innerHTML = 'Rate: <strong>' + fps + ' Hz</strong>';
 
       let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'Present' || echo 'Not Found'");
-      document.getElementById('chip-kcal').innerText = 'KCAL: ' + resKcal.stdout.trim();
+      document.getElementById('chip-kcal').innerHTML = 'KCAL: <strong>' + resKcal.stdout.trim() + '</strong>';
 
       let resLog = await exec("cat /data/adb/modules/mt6789-kcal/calibration.log 2>/dev/null || echo 'Service active.'");
       document.getElementById('log-text').innerText = resLog.stdout.trim();
