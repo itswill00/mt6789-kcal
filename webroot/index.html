@@ -602,8 +602,10 @@
       }
       document.getElementById('val-fps').innerText = fps + ' Hz';
 
-      let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'Present' || echo 'Not Found'");
-      document.getElementById('val-driver').innerText = resKcal.stdout.trim();
+      let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'KCAL Sysfs' || (service check SurfaceFlinger | grep -q 'found' && echo 'HWC 4x4' || echo 'Standard')");
+      if (resKcal.stdout && resKcal.stdout.trim()) {
+        document.getElementById('val-driver').innerText = resKcal.stdout.trim();
+      }
 
       let resLog = await exec("cat /data/adb/modules/mt6789-kcal/calibration.log 2>/dev/null || echo 'Service active.'");
       document.getElementById('log-text').innerText = resLog.stdout.trim();
