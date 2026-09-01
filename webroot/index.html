@@ -110,6 +110,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
+      margin-bottom: 10px;
     }
 
     .status-cell {
@@ -248,7 +249,7 @@
       padding: 10px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s ease;
@@ -268,6 +269,11 @@
       background: var(--surface-container-high);
       color: var(--on-surface);
       border-color: var(--border);
+    }
+
+    .btn-full {
+      width: 100%;
+      margin-top: 6px;
     }
 
     .console-box {
@@ -335,6 +341,7 @@
         <div class="status-val" id="val-driver">--</div>
       </div>
     </div>
+    <button class="btn btn-secondary btn-full" id="btn-fps-overlay" onclick="toggleFpsOverlay()">Show refresh rate overlay</button>
   </div>
 
   <div class="section-label">Presets</div>
@@ -427,7 +434,9 @@
     antigreen: { r: 256, g: 244, b: 240, sat: 100 }
   };
 
+  let fpsOverlayState = false;
   let toastTimer = null;
+
   function showToast(msg) {
     let p = document.getElementById('toast-pill');
     p.innerText = msg;
@@ -451,6 +460,26 @@
         resolve({ errno: 0, stdout: "Simulated execution", stderr: "" });
       }
     });
+  }
+
+  async function checkFpsOverlay() {
+    let res = await exec("getprop debug.sf.showfps");
+    let resSettings = await exec("settings get global show_refresh_rate 2>/dev/null");
+    fpsOverlayState = (res.stdout && res.stdout.trim() === "1") || (resSettings.stdout && resSettings.stdout.trim() === "1");
+    let btn = document.getElementById('btn-fps-overlay');
+    if (btn) {
+      btn.innerText = fpsOverlayState ? "Hide refresh rate overlay" : "Show refresh rate overlay";
+      btn.style.borderColor = fpsOverlayState ? "var(--primary)" : "var(--border)";
+    }
+  }
+
+  async function toggleFpsOverlay() {
+    fpsOverlayState = !fpsOverlayState;
+    let val = fpsOverlayState ? "1" : "0";
+    showToast(fpsOverlayState ? "Showing refresh rate overlay" : "Hiding refresh rate overlay");
+    await exec(`setprop debug.sf.showfps ${val}`);
+    await exec(`settings put global show_refresh_rate ${val}`);
+    checkFpsOverlay();
   }
 
   function updatePresetState() {
@@ -544,9 +573,14 @@
         document.getElementById('val-device').innerText = resModel.stdout.trim();
       }
 
-      let resFps = await exec("dumpsys SurfaceFlinger | grep 'refresh-rate' | head -n 1");
-      let m = resFps.stdout.match(/(\d+)\s*Hz/i) || resFps.stdout.match(/(\d+)\.\d+\s*fps/i);
-      let fps = m ? m[1] : '120';
+      let resFps = await exec("dumpsys display | grep -E 'renderFrameRate|mActiveSfDisplayMode|refreshRate' | head -n 5");
+      let fps = '120';
+      if (resFps.stdout) {
+        let m = resFps.stdout.match(/renderFrameRate\s+([0-9]+(\.[0-9]+)?)/i) ||
+                resFps.stdout.match(/refreshRate\s*=\s*([0-9]+(\.[0-9]+)?)/i) ||
+                resFps.stdout.match(/fps\s*=\s*([0-9]+(\.[0-9]+)?)/i);
+        if (m && m[1]) fps = Math.round(parseFloat(m[1]));
+      }
       document.getElementById('val-fps').innerText = fps + ' Hz';
 
       let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'Present' || echo 'Not Found'");
@@ -554,6 +588,8 @@
 
       let resLog = await exec("cat /data/adb/modules/mt6789-kcal/calibration.log 2>/dev/null || echo 'Service active.'");
       document.getElementById('log-text').innerText = resLog.stdout.trim();
+
+      checkFpsOverlay();
     } catch (e) {}
   }
 
