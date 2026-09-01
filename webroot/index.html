@@ -492,28 +492,40 @@
     showToast(`Setting refresh rate: ${target.toUpperCase()}`);
 
     if (target === '60') {
+      await exec("settings put system miui_refresh_rate 60");
+      await exec("settings put secure miui_refresh_rate 60");
       await exec("settings put system user_refresh_rate 60");
+      await exec("settings put global user_refresh_rate 60");
       await exec("settings put system peak_refresh_rate 60.0");
       await exec("settings put system min_refresh_rate 60.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 60.0 2>/dev/null");
     } else if (target === '90') {
+      await exec("settings put system miui_refresh_rate 90");
+      await exec("settings put secure miui_refresh_rate 90");
       await exec("settings put system user_refresh_rate 90");
+      await exec("settings put global user_refresh_rate 90");
       await exec("settings put system peak_refresh_rate 90.0");
       await exec("settings put system min_refresh_rate 90.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 90.0 2>/dev/null");
     } else if (target === '120') {
+      await exec("settings put system miui_refresh_rate 120");
+      await exec("settings put secure miui_refresh_rate 120");
       await exec("settings put system user_refresh_rate 120");
+      await exec("settings put global user_refresh_rate 120");
       await exec("settings put system peak_refresh_rate 120.0");
       await exec("settings put system min_refresh_rate 120.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 120.0 2>/dev/null");
     } else {
+      await exec("settings put system miui_refresh_rate 0");
+      await exec("settings put secure miui_refresh_rate 0");
       await exec("settings put system user_refresh_rate 0");
+      await exec("settings put global user_refresh_rate 0");
       await exec("settings put system peak_refresh_rate 120.0");
       await exec("settings put system min_refresh_rate 60.0");
       await exec("cmd display clear-user-preferred-display-mode 2>/dev/null");
     }
 
-    setTimeout(refreshStats, 800);
+    setTimeout(refreshStats, 500);
   }
 
   async function checkFpsOverlay() {
@@ -645,6 +657,15 @@
         if (m && m[1]) fps = Math.round(parseFloat(m[1]));
       }
       document.getElementById('val-fps').innerText = fps + ' Hz';
+
+      let resRateMode = await exec("settings get system miui_refresh_rate 2>/dev/null");
+      if (resRateMode.stdout) {
+        let val = resRateMode.stdout.trim();
+        let matched = (val === '60' || val === '90' || val === '120') ? val : 'auto';
+        document.querySelectorAll('[id^="rate-"]').forEach(btn => btn.classList.remove('active'));
+        let activeBtn = document.getElementById(`rate-${matched}`);
+        if (activeBtn) activeBtn.classList.add('active');
+      }
 
       let resKcal = await exec("[ -f /sys/devices/platform/kcal_ctrl.0/kcal ] && echo 'KCAL Sysfs' || (service check SurfaceFlinger | grep -q 'found' && echo 'HWC 4x4' || echo 'Standard')");
       if (resKcal.stdout && resKcal.stdout.trim()) {
