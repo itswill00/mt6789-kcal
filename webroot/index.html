@@ -489,9 +489,11 @@
     let activeBtn = document.getElementById(`rate-${target}`);
     if (activeBtn) activeBtn.classList.add('active');
 
-    showToast(`Setting refresh rate: ${target.toUpperCase()}`);
+    showToast(`Locking refresh rate: ${target.toUpperCase()}`);
+    await exec(`echo '${target}' > /data/adb/modules/mt6789-kcal/rate_mode.txt`);
 
     if (target === '60') {
+      await exec("settings put global user_preferred_refresh_rate 60.0");
       await exec("settings put system miui_refresh_rate 60");
       await exec("settings put secure miui_refresh_rate 60");
       await exec("settings put system user_refresh_rate 60");
@@ -500,6 +502,7 @@
       await exec("settings put system min_refresh_rate 60.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 60.0 2>/dev/null");
     } else if (target === '90') {
+      await exec("settings put global user_preferred_refresh_rate 90.0");
       await exec("settings put system miui_refresh_rate 90");
       await exec("settings put secure miui_refresh_rate 90");
       await exec("settings put system user_refresh_rate 90");
@@ -508,6 +511,7 @@
       await exec("settings put system min_refresh_rate 90.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 90.0 2>/dev/null");
     } else if (target === '120') {
+      await exec("settings put global user_preferred_refresh_rate 120.0");
       await exec("settings put system miui_refresh_rate 120");
       await exec("settings put secure miui_refresh_rate 120");
       await exec("settings put system user_refresh_rate 120");
@@ -516,6 +520,7 @@
       await exec("settings put system min_refresh_rate 120.0");
       await exec("cmd display set-user-preferred-display-mode 1080 2400 120.0 2>/dev/null");
     } else {
+      await exec("rm -f /data/adb/modules/mt6789-kcal/rate_mode.txt");
       await exec("settings put system miui_refresh_rate 0");
       await exec("settings put secure miui_refresh_rate 0");
       await exec("settings put system user_refresh_rate 0");
@@ -658,7 +663,7 @@
       }
       document.getElementById('val-fps').innerText = fps + ' Hz';
 
-      let resRateMode = await exec("settings get system miui_refresh_rate 2>/dev/null");
+      let resRateMode = await exec("cat /data/adb/modules/mt6789-kcal/rate_mode.txt 2>/dev/null || settings get system miui_refresh_rate 2>/dev/null");
       if (resRateMode.stdout) {
         let val = resRateMode.stdout.trim();
         let matched = (val === '60' || val === '90' || val === '120') ? val : 'auto';
